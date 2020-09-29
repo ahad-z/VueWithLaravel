@@ -20,3 +20,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::namespace('Admin')->group(function () {
+    Route::get('/posts','PostController@index');
+    Route::get('/category', 'CategoryController@index');
+    Route::post('/add-category','CategoryController@store')->name('add.category');
+});
+Route::get('/{anypath}', 'HomeController@index')->where('path', '.*');
+

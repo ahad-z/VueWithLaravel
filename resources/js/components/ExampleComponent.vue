@@ -6,7 +6,7 @@
                     <div class="card-header">Example Component</div>
 
                     <div class="card-body">
-                        I'm an example component.
+                        It's me baby...How are u vue....I back to learn u....u hear me !
                     </div>
                 </div>
             </div>
@@ -16,8 +16,6 @@
 
 <script>
     export default {
-        mounted() {
-            console.log('Component mounted.')
-        }
+
     }
 </script>
