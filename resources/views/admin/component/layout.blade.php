@@ -101,6 +101,12 @@
                             <p>Category</p>
                         </router-link>
                     </li>
+                    <li class="nav-item">
+                        <router-link to="/posts" class="nav-link">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>Post</p>
+                        </router-link>
+                    </li>
                 </ul>
             </nav>
             <!-- /.sidebar-menu -->

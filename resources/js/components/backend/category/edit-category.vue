@@ -6,15 +6,15 @@
                     <div class="col-md-8 offset-md-2">
                         <div class="card card-info">
                             <div class="card-header">
-                                <h3 class="card-title">Add Your Category</h3>
+                                <h3 class="card-title">Edit Your Category</h3>
                                 <router-link to="/categories" class="btn btn-primary btn-sm" style="float: right" type="submit">All category</router-link>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body p-0">
-                                <form class="form-horizontal" @submit.prevent="addCategory">
+                                <form class="form-horizontal" @submit.prevent="updateCategory">
                                     <div class="card-body">
                                         <div class="form-group row">
-                                            <label for="category" class="col-sm-2 col-form-label">Add Your Category</label>
+                                            <label for="category" class="col-sm-2 col-form-label">Update Your Category</label>
                                             <div class="col-sm-10">
                                                 <input type="text" class="form-control" :class="{ 'is-invalid': form.errors.has('category_name') }" id="category" placeholder="Enter Your Category..." v-model="form.category_name" name="category_name">
                                                 <has-error :form="form" field="category_name"></has-error>
@@ -36,7 +36,7 @@
                                     </div>
                                     <!-- /.card-body -->
                                     <div class="card-footer">
-                                        <button type="submit" :disabled="form.busy" class="btn btn-info">Add</button>
+                                        <button type="submit" :disabled="form.busy" class="btn btn-info">Update</button>
                                         <button type="reset" class="btn btn-default float-right">Reset</button>
                                     </div>
                                     <!-- /.card-footer -->
@@ -52,7 +52,7 @@
 
 <script>
 export default {
-    name: "add-category",
+name: "edit-category",
     data: function () {
         return {
             form: new Form({
@@ -61,24 +61,27 @@ export default {
             })
         }
     },
+
+    mounted() {
+    this.getCategory()
+    },
     methods:{
-        addCategory:function (){
-            const currentThis = this;
-            this.form.post('/add-category').then(response => {
-
-                if(response.data.status){
-
-                    toastr.success('Category Add Success')
-                    currentThis.form.category_name = null;
-                    currentThis.form.status = null;
-
-                }else{
-                    toastr.warning(response.data.message)
-
-                }
+        updateCategory:function (){
+            let FatherThis = this
+            this.form.post("/category-update/" + this.$route.params.slug).then(response => {
+                Toast.fire({
+                    icon: 'success',
+                    title: 'Category updated  successfully'
+                })
+                FatherThis.$router.push('/categories');
 
             })
-
+        },
+        getCategory:function(){
+            let FatherThis = this
+            axios.get("/category-show/" + this.$route.params.slug ).then(response => {
+                FatherThis.form.fill(response.data.category)
+            })
         }
     }
 }

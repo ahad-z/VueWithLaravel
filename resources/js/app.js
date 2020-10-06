@@ -37,7 +37,9 @@ import  toastr from 'toastr'
 
 window.toastr = toastr
 
+// Moment js
 
+import{momet} from "./Filter/filter"
 // VUe router
 import VueRouter from 'vue-router'
 
@@ -60,6 +62,7 @@ const store = new Vuex.Store(
 )
 
 /*Vue.component('home', require('./components/backend/home.vue').default);*/
+import "./Mixin/mixins"
 
 const app = new Vue({
     el: '#content',

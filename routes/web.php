@@ -21,10 +21,26 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+
+
 Route::namespace('Admin')->group(function () {
-    Route::get('/posts','PostController@index');
     Route::get('/category', 'CategoryController@index');
     Route::post('/add-category','CategoryController@store')->name('add.category');
+    Route::get('/category-delete/{categorySlug}','CategoryController@destroy');
+    Route::get('/category-show/{slug}','CategoryController@show');
+    Route::post('/category-update/{slug}','CategoryController@update');
+    Route::post('/categories/removes-items','CategoryController@removesCategory');
+    Route::post('/categories/change-status','CategoryController@changeStatus');
+
+
+    # post Controller
+    Route::post('/post/remove-posts', 'PostController@removesPosts');
+    Route::post('/post/status-change', 'PostController@statusChange');
+    Route::resource('/post','PostController');
+
+
 });
-Route::get('/{anypath}', 'HomeController@index')->where('path', '.*');
+Route::get('/{anypath}', 'HomeController@index')->where('anypath', '.*');
+
+
 

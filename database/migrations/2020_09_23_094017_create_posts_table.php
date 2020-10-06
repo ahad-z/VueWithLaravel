@@ -14,10 +14,12 @@ class CreatePostsTable extends Migration
     public function up()
     {
         Schema::create('posts', function (Blueprint $table) {
+
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('category_id');
             $table->string('title',180);
+            $table->string('post_slug');
             $table->longText('content');
             $table->string('thumbnail', 255);
             $table->enum('status',['draft', 'published'])->default('draft');
