@@ -39,7 +39,7 @@ window.toastr = toastr
 
 // Moment js
 
-import{momet} from "./Filter/filter"
+import{moment} from "./Filter/filter"
 // VUe router
 import VueRouter from 'vue-router'
 
@@ -60,12 +60,32 @@ import storeData from "./store/store";
 const store = new Vuex.Store(
     storeData
 )
+/*For ck Editor*/
+import CKEditor from '@ckeditor/ckeditor5-vue';
+
+Vue.use( CKEditor );
 
 /*Vue.component('home', require('./components/backend/home.vue').default);*/
 import "./Mixin/mixins"
+/* For fire*/
+window.Fire = new Vue();
+
+/*For paginate */
+
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 const app = new Vue({
     el: '#content',
     router,
-    store
+    store,
+    data() {
+        return {
+            search: ''
+        }
+    },
+    methods:{
+        searchHit() {
+            Fire.$emit('searching', this.search)
+        }
+    }
 });

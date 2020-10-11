@@ -8,7 +8,12 @@
                     <div class="card card-success">
                         <div class="card-header">
                             <h3 class="card-title">All Post</h3>
-                            <router-link to="/add-post" class="btn btn-primary btn-sm" style="float: right" type="submit">Add Post</router-link>
+                            <router-link to="/add-posts" class="btn btn-primary btn-sm" style="float: right" type="submit">Add Post</router-link>
+                            <div class="form-inline ml-3" style="float: right;margin-right: 10px;">
+                                <div class="input-group input-group-sm">
+                                    <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search" v-model="searchKey" @keyup="searchContent()">
+                                </div>
+                            </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body p-0">
@@ -19,7 +24,7 @@
                                 <thead>
                                 <tr>
                                     <th>
-                                        <input type="checkbox" :disabled="afterEmptyData()" @click="selectAll" v-model="selectedAll">
+                                        <input type="checkbox" :disabled="Posts.data == 0" @click="selectAll" v-model="selectedAll">
                                     </th>
                                     <th>#</th>
                                     <th>Category</th>
@@ -33,19 +38,19 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr v-for="(post , index) in Posts ">
+                                <tr v-for="(post , index) in Posts.data">
                                     <td><input type="checkbox" :value="post.id" v-model="selected"></td>
                                     <td>{{ index+1 }}</td>
                                     <td>{{ post.category.category_name }}</td>
                                     <td>{{ post.title | shortContent(20, '......') }}</td>
-                                    <td>{{ post.content |shortContent(25, '.......') }}</td>
-                                    <td> <img width="60px" class="rounded-circle" :src="post.thumbnail" alt="img"></td>
+                                    <td v-html="post.content"></td>
+                                    <td> <img width="100px"  :src="fileLink(post.thumbnail)" alt="img"></td>
                                     <td><span class="badge" :class="setColor(post.status)" >{{ post.status | capitalize }} </span></td>
                                     <td>{{ post.created_at |time }}</td>
-                                    <td>{{ post.user.name }}</td>
+                                    <td>{{ post.user.name  }}</td>
                                     <td>
                                         <div class="btn-group">
-                                            <router-link :to="`/post-edit/${post.post_slug}`" class="btn btn-info btn-sm">Edit</router-link>
+                                            <router-link :to="`/posts-edit/${post.post_slug}`" class="btn btn-info btn-sm">Edit</router-link>
                                             <button @click="deletePost(post.post_slug)"  type="submit" class="btn btn-danger btn-sm">Delete</button>
                                         </div>
                                     </td>
@@ -53,7 +58,7 @@
                                 <tr>
                                     <td colspan="9">
                                         <div class="dropdown">
-                                            <button :disabled="!isSelected" v-if=" Posts.length > 0 " class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
+                                            <button :disabled="!isSelected" v-if=" Posts.data && Posts.data.length > 0 " class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown">
                                                 Action
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -64,10 +69,13 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td colspan="9" style="color: red;text-align: center" v-if="afterEmptyData()"> <h4>No record available</h4></td>
+                                    <td colspan="9" style="color: red;text-align: center" v-if="Posts.data == 0"> <h4>No record available</h4></td>
                                 </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="card-footer">
+                            <pagination :data="Posts" @pagination-change-page="paginate"></pagination>
                         </div>
                     </div>
                 </div>
@@ -80,12 +88,14 @@
 <script>
 export default {
     name: "mange.vue",
-    data(){
+    data() {
         return{
-
             selected:[],
             selectedAll:false,
-            isSelected :false
+            isSelected :false,
+            page:1,
+            searchKey:''
+
         }
     },
     watch:{
@@ -118,14 +128,14 @@ export default {
                 }
             })
         },
-        afterEmptyData(){
-            return this.Posts.length < 1;
-        },
+        /*afterEmptyData(post){
+           return  Object.keys(post).length === 0
+        },*/
         selectAll:function(event){
             if(event.target.checked === false){
                 this.selected = []
             }else{
-                this.Posts.forEach((post) => {
+                this.Posts.data.forEach((post) => {
                     this.selected.push(post.id)
                 })
             }
@@ -133,8 +143,13 @@ export default {
         removePosts: function(data){
             this.confirm(() => {
                 axios.post('/post/remove-posts',{selectedID :data}).then((response) => {
-                    this.multipleCheckPosts()
-                    toastr.success(response.data.total + ' Post has been deleted')
+                   if(response.data.status){
+                       this.multipleCheck()
+                       this.$store.dispatch("getPosts");
+                       toastr.success(response.data.total + ' '+ response.data.message)
+                   }else {
+                       toastr.warning(response.data.message)
+                   }
                 }).catch((error) => {
                     console.log(error)
                 })
@@ -143,7 +158,8 @@ export default {
         changeStatus : function(data){
             axios.post('/post/status-change', {selectedId:data}).then((response) => {
                 if(response.data.status){
-                    this.multipleCheckPosts()
+                    this.multipleCheck()
+                    this.$store.dispatch("getPosts")
                     toastr.success(response.data.total + ' Post status has been updated')
 
                 }else{
@@ -152,10 +168,22 @@ export default {
             }).catch((error) => {
                 console.log(error)
             })
-        }
+        },
+        searchContent: _.debounce( function (){
+            this.$store.dispatch("getPosts", { search_query: this.searchKey })
+        }, 300),
+        paginate: function(page = 1) {
+                this.page = page;
+                this.$store.dispatch("getPosts", { page: this.page, search_query: this.searchKey })
+            }
     },
     mounted(){
-        this.$store.dispatch("getPosts");
+        this.paginate();
+        this.$store.dispatch("getPosts")
+        Fire.$on('searching', (data) => {
+            this.searchKey = data;
+            this.paginate();
+        })
     }
 }
 </script>

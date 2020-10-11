@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Category;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ModelCollection;
 use Carbon\Doctrine\CarbonType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -11,18 +12,17 @@ use Illuminate\Support\Facades\DB;
 class CategoryController extends Controller
 {
 
-    public function index()
+    public function index(Request  $request)
     {
-        $categories =  Category::with('posts')->get();
-        return response()->json(['categories' => $categories], 200);
+        $categories = Category::with('posts')
+            ->orderBy('id',"DESC");
+
+        if(isset($request->search_query)){
+            $categories =  $categories->where('category_name', 'LIKE', '%' . $request->get('search_query') . '%');
+        }
+
+        return new ModelCollection($categories->paginate(10 ));
     }
-
-
-    public function create()
-    {
-        //
-    }
-
 
     public function store(Request $request)
     {
@@ -48,17 +48,8 @@ class CategoryController extends Controller
     public function show($slug)
     {
         $category = Category::where('category_slug',$slug)->first();
-
         return response()->json(['category' =>$category], 200);
-
     }
-
-
-    public function edit($id)
-    {
-        //
-    }
-
 
     public function update(Request $request, $slug)
     {
@@ -127,7 +118,10 @@ class CategoryController extends Controller
         }catch (\Exception $e){
             return response()->json(['status' => false, 'message' => $e->getMessage()],200);
         }
-
+    }
+    public  function activeCategory(){
+        $categories = Category::where('status', '1')->get();
+        return response()->json(['allActiveCategory' => $categories] , 200);
     }
 
 

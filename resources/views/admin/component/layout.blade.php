@@ -28,16 +28,16 @@
         </ul>
 
         <!-- SEARCH FORM -->
-        <form class="form-inline ml-3">
+        <div class="form-inline ml-3">
             <div class="input-group input-group-sm">
-                <input class="form-control form-control-navbar" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control form-control-navbar" type="search" @keyup.enter="searchHit" v-model="search" placeholder="Search" aria-label="Search">
                 <div class="input-group-append">
-                    <button class="btn btn-navbar" type="submit">
+                    <button class="btn btn-navbar" @click="searchHit">
                         <i class="fas fa-search"></i>
                     </button>
                 </div>
             </div>
-        </form>
+        </div>
         <!-- Right navbar links -->
         <ul class="navbar-nav ml-auto">
             <!-- Messages Dropdown Menu -->
@@ -90,19 +90,19 @@
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     <li class="nav-item">
-                        <router-link to="/home" class="nav-link">
+                        <router-link to="/home" class="nav-link" active-class="active">
                             <i class="nav-icon fas fa-th"></i>
                             <p>Dashboard</p>
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/categories" class="nav-link">
+                        <router-link to="/categories" class="nav-link" active-class="active">
                             <i class="nav-icon fas fa-th"></i>
                             <p>Category</p>
                         </router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link to="/posts" class="nav-link">
+                        <router-link to="/posts" class="nav-link" active-class="active">
                             <i class="nav-icon fas fa-th"></i>
                             <p>Post</p>
                         </router-link>
@@ -143,7 +143,10 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
+<script src="https://cdn.jsdelivr.net/npm/underscore@1.11.0/underscore-min.js
+"></script>)
 <script src="{{ asset('js/app.js') }}"></script>
+
 
 </body>
 </html>

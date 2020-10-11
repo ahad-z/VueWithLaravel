@@ -31,16 +31,20 @@ Route::namespace('Admin')->group(function () {
     Route::post('/category-update/{slug}','CategoryController@update');
     Route::post('/categories/removes-items','CategoryController@removesCategory');
     Route::post('/categories/change-status','CategoryController@changeStatus');
+    Route::get('/category/active-category','CategoryController@activeCategory');
+
+
 
 
     # post Controller
     Route::post('/post/remove-posts', 'PostController@removesPosts');
     Route::post('/post/status-change', 'PostController@statusChange');
+    Route::get('/post/posts-search', 'PostController@searchContent');
+    Route::get('/post/show/{slug}', 'PostController@show');
+
     Route::resource('/post','PostController');
-
-
 });
-Route::get('/{anypath}', 'HomeController@index')->where('anypath', '.*');
 
+Route::get('/{anypath}', 'HomeController@index')->where('anypath', '^(?!anypath).*$');
 
 

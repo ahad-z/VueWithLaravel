@@ -16,7 +16,7 @@ export const routes = [
     { path: '/edit-category/:slug', component: editCategory },
 
     { path: '/posts', component: posts },
-    { path: '/add-post', component: addPost },
-    { path: '/post-edit/:slug', component: editPost },
+    { path: '/add-posts', component: addPost },
+    { path: '/posts-edit/:slug', component: editPost },
 
 ]
