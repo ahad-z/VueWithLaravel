@@ -56,12 +56,26 @@ export default {
                 console.log(error)
             })
         },
+        getTopCategories(context){
+            axios.get('/category/active-top-category').then(response => {
+                context.commit('catchCategories', response.data.data)
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
         getPosts (context,data = null){
             let queryParams = '';
             if(data){
                 queryParams = `?${ $.param(data) }`;
             }
             axios.get(`/post${queryParams}`).then(response => {
+                context.commit('catchPosts', response.data)
+            }).catch((error) => {
+                console.log(error)
+            })
+        },
+        getAllPosts(context){
+            axios.get('/post').then(response => {
                 context.commit('catchPosts', response.data)
             }).catch((error) => {
                 console.log(error)

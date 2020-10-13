@@ -14,13 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('site.layout');
 });
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
 
 
 Route::namespace('Admin')->group(function () {
@@ -45,6 +44,18 @@ Route::namespace('Admin')->group(function () {
     Route::resource('/post','PostController');
 });
 
-Route::get('/{anypath}', 'HomeController@index')->where('anypath', '^(?!anypath).*$');
+/* for front End */
+Route::namespace('Admin')->group(function () {
 
+    Route::get('/category/active-top-category', 'CategoryController@activeTopCategory');
+
+    /*Post Controller*/
+
+    Route::resource('/post','PostController');
+});
+Route::resource('/votes', 'VoteController');
+
+Route::get('/{vue_capture?}', 'HomeController@index')
+    ->where('vue_capture', '^(?!vue_capture).*$')
+    ->name('home');
 

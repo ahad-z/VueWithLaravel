@@ -41,8 +41,15 @@ Vue.mixin({
             }else{
                 toastr.warning('Image Extension must be "JPEG" and "PNG" ')
             }
-        }
-    }
+        },
+       htmlTagRemover: function(str) {
+            if ((str===null) || (str===''))
+                return false;
+            else
+                str = str.toString();
+            return str.replace( /(<([^>]+)>)/ig, '');
+       }
+}
 
 })
 

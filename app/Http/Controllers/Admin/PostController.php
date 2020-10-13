@@ -15,24 +15,25 @@ class PostController extends Controller
 
     public function index(Request  $request)
     {
-        $posts =  Post::with('category','user')
-
-           ->orderBy('id',"DESC");
+        $posts =  Post::with('category','user');
 
         if(isset($request->search_query)){
-
             $posts =   $posts->where('title', 'LIKE', '%' . $request->get('search_query') . '%');
         }
+        if(isset($request->slug)){
+            $cat = Category::where('category_slug', $request->slug)->first();
+            if ($cat) {
+                $posts = $posts->where('category_id', $cat->id);
+            }else{
+                $posts = $posts->where('post_slug', $request->slug);
+            }
+        }
 
-     return new ModelCollection($posts->paginate(2));
+        $posts =   $posts->where('status', Post::PUBLISHED_POST);
+
+     return new ModelCollection($posts->orderBy('id',"DESC")->paginate(10));
 
     }
-
-    public function create()
-    {
-        //
-    }
-
 
     public function store(Request $request)
     {
@@ -64,7 +65,7 @@ class PostController extends Controller
                 'status'           => $request->status
             ]);
             if($post){
-                 Image::make($request->thumbnail)->resize(400, 200)->save(public_path('uploads/post/').$file_Name);
+                 Image::make($request->thumbnail)->resize(870, 450)->save(public_path('uploads/post/').$file_Name);
             }
             return response()->json(['status' => true, 'message' => 'Post Submitted Successfully'],200);
         }catch (\Exception $e){
@@ -75,6 +76,7 @@ class PostController extends Controller
     public function show(Request $request)
     {
        $post = Post::where('post_slug', $request->slug)->first();
+
        return response()->json(['post' => $post], 200);
     }
 
@@ -87,12 +89,11 @@ class PostController extends Controller
 
     public function update(Request $request,$slug)
     {
-
        try{
         $post = Post::where('post_slug', $slug)->first();
         $post->title     = $request->title;
         $post->post_slug = slugify($request->title);
-        $post->content   = $request->content;
+        $post->content   = $request->get('content');
         $post->status    = $request->status;
 
         if($request->thumbnail !== $post->thumbnail){

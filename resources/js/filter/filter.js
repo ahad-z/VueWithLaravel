@@ -3,7 +3,7 @@ import moment from 'moment'
 import Vue from  "vue"
 
 Vue.filter('time',(a)=>{
-    return moment(a).startOf('hour').fromNow();
+    return moment(a).format('dddd');
 })
 
 Vue.filter('shortContent',(content,length,s) => {

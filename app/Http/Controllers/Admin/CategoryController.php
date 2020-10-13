@@ -21,7 +21,7 @@ class CategoryController extends Controller
             $categories =  $categories->where('category_name', 'LIKE', '%' . $request->get('search_query') . '%');
         }
 
-        return new ModelCollection($categories->paginate(10 ));
+        return new ModelCollection($categories->paginate(10));
     }
 
     public function store(Request $request)
@@ -122,6 +122,15 @@ class CategoryController extends Controller
     public  function activeCategory(){
         $categories = Category::where('status', '1')->get();
         return response()->json(['allActiveCategory' => $categories] , 200);
+    }
+
+   public  function activeTopCategory(){
+
+        $categories = Category::where('status', '1');
+
+        return [
+            'data' => $categories->get()
+        ];
     }
 
 

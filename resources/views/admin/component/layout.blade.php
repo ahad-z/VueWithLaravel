@@ -143,10 +143,8 @@
 <!-- ./wrapper -->
 
 <!-- jQuery -->
-<script src="https://cdn.jsdelivr.net/npm/underscore@1.11.0/underscore-min.js
-"></script>)
+<script src="https://cdn.jsdelivr.net/npm/underscore@1.11.0/underscore-min.js"></script>
 <script src="{{ asset('js/app.js') }}"></script>
-
 
 </body>
 </html>
