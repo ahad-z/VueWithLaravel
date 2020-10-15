@@ -30,15 +30,10 @@
                         <!-- /.contact-row -->
                         <!-- ============================================================= SEARCH AREA ============================================================= -->
                         <div class="search-area">
-                            <form>
                                 <div class="control-group">
-
-                                    <input class="search-field" placeholder="Search here..." />
-
+                                    <input class="search-field" v-model="searchKey" placeholder="Search here..."  @keyup.enter="searchFunc()">
                                     <a class="search-button" href="#" ></a>
-
                                 </div>
-                            </form>
                         </div><!-- /.search-area -->
                         <!-- ============================================================= SEARCH AREA : END ============================================================= -->				</div><!-- /.top-search-holder -->
 
@@ -87,7 +82,9 @@
 export default {
     name: "Header",
     data(){
-        return {}
+        return {
+            searchKey:''
+        }
     },
     computed:{
         getTopCategories () {
@@ -100,7 +97,13 @@ export default {
     methods:{
         getPostsByCategorySlug(slug) {
             this.$store.dispatch("getPosts", {slug})
+        },
+        searchFunc : function(){
+            let searchContent = this.searchKey
+            this.$store.dispatch('algoliaSearchAction', searchContent)
+        
         }
+
     }
 }
 </script>

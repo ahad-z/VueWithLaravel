@@ -13,10 +13,9 @@ use Illuminate\Support\Facades\DB;
 class PostController extends Controller
 {
 
-    public function index(Request  $request)
+    public function index(Request $request)
     {
-        $posts =  Post::with('category','user');
-
+        $posts =  Post::with('category','user','votes');
         if(isset($request->search_query)){
             $posts =   $posts->where('title', 'LIKE', '%' . $request->get('search_query') . '%');
         }
@@ -31,7 +30,19 @@ class PostController extends Controller
 
         $posts =   $posts->where('status', Post::PUBLISHED_POST);
 
-     return new ModelCollection($posts->orderBy('id',"DESC")->paginate(10));
+     return new ModelCollection($posts->orderBy('id',"DESC")->paginate(2));
+
+    }
+    public function seachAlgolia($searchKey)
+    {
+
+       /* $posts = Post::search($searchKey);
+        $posts->load('category','user','votes');*/
+
+        $ids   = Post::search($searchKey)->keys()->toArray();
+        $posts = Post::with('category','user','votes')->whereIn('id', $ids);
+
+       return new ModelCollection($posts->get());
 
     }
 
@@ -75,8 +86,7 @@ class PostController extends Controller
 
     public function show(Request $request)
     {
-       $post = Post::where('post_slug', $request->slug)->first();
-
+       $post = Post::where('post_slug', $request->slug)->with('user','category','votes')->first();
        return response()->json(['post' => $post], 200);
     }
 

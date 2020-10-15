@@ -6,6 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Vote extends Model
 {
-    protected  $fillable = ['body'];
-
+    protected  $fillable = ['body', 'post_id'];
 }

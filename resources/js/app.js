@@ -50,7 +50,7 @@ import{routes} from './routes/routes.js'
 
 const router = new VueRouter({
     routes,
-    mode:'history',
+    // mode:'history'
 })
 /* For Vuex*/
 import Vuex from 'vuex'

@@ -40,6 +40,7 @@ Route::namespace('Admin')->group(function () {
     Route::post('/post/status-change', 'PostController@statusChange');
     Route::get('/post/posts-search', 'PostController@searchContent');
     Route::get('/post/show/{slug}', 'PostController@show');
+    Route::get('/post/algosearch/{searchKey}', 'PostController@seachAlgolia');
 
     Route::resource('/post','PostController');
 });

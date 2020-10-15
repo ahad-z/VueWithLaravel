@@ -3017,15 +3017,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Header",
   data: function data() {
-    return {};
+    return {
+      searchKey: ''
+    };
   },
   computed: {
     getTopCategories: function getTopCategories() {
@@ -3040,6 +3037,10 @@ __webpack_require__.r(__webpack_exports__);
       this.$store.dispatch("getPosts", {
         slug: slug
       });
+    },
+    searchFunc: function searchFunc() {
+      var searchContent = this.searchKey;
+      this.$store.dispatch('algoliaSearchAction', searchContent);
     }
   }
 });
@@ -3056,12 +3057,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 //
 //
 //
@@ -3090,8 +3085,29 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-
-/*import  Comment from "./Comment";*/
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Singlepostview",
@@ -3099,20 +3115,15 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       form: new Form({
         body: null
-      })
+      }),
+      post: null
     };
   },
-
-  /*components: {Comment},
-  comments:{
-      Comment
-  },*/
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
-    singlePostDetailes: 'posts'
-  })),
+  computed: {},
   methods: {
-    addVote: function addVote() {
+    addComment: function addComment() {
       var currentThis = this;
+      this.form.post_id = this.post.id;
       this.form.post('/votes').then(function (response) {
         if (response.data.status) {
           Toast.fire({
@@ -3123,15 +3134,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         } else {
           Toast.fire({
             icon: 'warning',
-            title: 'Something went Wrong!'
+            title: response.data.message
           });
         }
       });
     }
   },
   mounted: function mounted() {
-    this.$store.dispatch("getPosts", {
-      slug: this.$route.params.slug
+    var _this = this;
+
+    axios.get("/post/show/".concat(this.$route.params.slug)).then(function (response) {
+      _this.post = response.data.post;
+      console.log(response.data);
+    })["catch"](function (error) {
+      console.log(error);
     });
   }
 });
@@ -3168,17 +3184,32 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Home",
   data: function data() {
-    return {};
+    return {
+      page: 1
+    };
   },
   computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapGetters"])({
     publishedPosts: 'posts',
     categories: 'categories',
     paginateCategory: 'paginateCategory'
   })),
+  methods: {
+    paginate: function paginate() {
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      this.page = page;
+      this.$store.dispatch("getAllPosts", {
+        page: this.page
+      });
+    }
+  },
   mounted: function mounted() {
     this.$store.dispatch("getAllPosts");
   }
@@ -68382,7 +68413,57 @@ var render = function() {
             ]
           ),
           _vm._v(" "),
-          _vm._m(1)
+          _c(
+            "div",
+            { staticClass: "col-xs-12 col-sm-12 col-md-7 top-search-holder" },
+            [
+              _c("div", { staticClass: "search-area" }, [
+                _c("div", { staticClass: "control-group" }, [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.searchKey,
+                        expression: "searchKey"
+                      }
+                    ],
+                    staticClass: "search-field",
+                    attrs: { placeholder: "Search here..." },
+                    domProps: { value: _vm.searchKey },
+                    on: {
+                      keyup: function($event) {
+                        if (
+                          !$event.type.indexOf("key") &&
+                          _vm._k(
+                            $event.keyCode,
+                            "enter",
+                            13,
+                            $event.key,
+                            "Enter"
+                          )
+                        ) {
+                          return null
+                        }
+                        return _vm.searchFunc()
+                      },
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.searchKey = $event.target.value
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _c("a", {
+                    staticClass: "search-button",
+                    attrs: { href: "#" }
+                  })
+                ])
+              ])
+            ]
+          )
         ])
       ]),
       _vm._v(" "),
@@ -68395,7 +68476,7 @@ var render = function() {
               attrs: { role: "navigation" }
             },
             [
-              _vm._m(2),
+              _vm._m(1),
               _vm._v(" "),
               _c("div", { staticClass: "nav-bg-class" }, [
                 _c(
@@ -68499,29 +68580,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      { staticClass: "col-xs-12 col-sm-12 col-md-7 top-search-holder" },
-      [
-        _c("div", { staticClass: "search-area" }, [
-          _c("form", [
-            _c("div", { staticClass: "control-group" }, [
-              _c("input", {
-                staticClass: "search-field",
-                attrs: { placeholder: "Search here..." }
-              }),
-              _vm._v(" "),
-              _c("a", { staticClass: "search-button", attrs: { href: "#" } })
-            ])
-          ])
-        ])
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "navbar-header" }, [
       _c(
         "button",
@@ -68570,34 +68628,34 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm._l(_vm.singlePostDetailes.data, function(post) {
-        return _c("div", { staticClass: "blog-post  wow fadeInUp" }, [
-          _c("a", { attrs: { href: "blog-details.html" } }, [
-            _c("img", {
-              staticClass: "img-responsive",
-              attrs: { src: _vm.fileLink(post.thumbnail), alt: "" }
-            })
-          ]),
-          _vm._v(" "),
-          _c("h1", [
+      _vm.post
+        ? _c("div", { staticClass: "blog-post  wow fadeInUp" }, [
             _c("a", { attrs: { href: "blog-details.html" } }, [
-              _vm._v(_vm._s(post.title))
-            ])
-          ]),
-          _vm._v(" "),
-          _c("span", { staticClass: "author" }, [
-            _vm._v(_vm._s(post.user.name))
-          ]),
-          _vm._v(" "),
-          _c("span", { staticClass: "review" }, [_vm._v("6 Comments")]),
-          _vm._v(" "),
-          _c("span", { staticClass: "date-time" }, [
-            _vm._v(_vm._s(_vm._f("time")(post.created_at)))
-          ]),
-          _vm._v(" "),
-          _c("p", { domProps: { innerHTML: _vm._s(post.content) } })
-        ])
-      }),
+              _c("img", {
+                staticClass: "img-responsive",
+                attrs: { src: _vm.fileLink(_vm.post.thumbnail), alt: "" }
+              })
+            ]),
+            _vm._v(" "),
+            _c("h1", [
+              _c("a", { attrs: { href: "blog-details.html" } }, [
+                _vm._v(_vm._s(_vm.post.title))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "author" }, [
+              _vm._v(_vm._s(_vm.post.user.name))
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "review" }, [_vm._v("6 Comments")]),
+            _vm._v(" "),
+            _c("span", { staticClass: "date-time" }, [
+              _vm._v(_vm._s(_vm._f("time")(_vm.post.created_at)))
+            ]),
+            _vm._v(" "),
+            _c("p", { domProps: { innerHTML: _vm._s(_vm.post.content) } })
+          ])
+        : _vm._e(),
       _vm._v(" "),
       _c("hr"),
       _vm._v(" "),
@@ -68611,12 +68669,14 @@ var render = function() {
               on: {
                 submit: function($event) {
                   $event.preventDefault()
-                  return _vm.addVote($event)
+                  return _vm.addComment($event)
                 }
               }
             },
             [
-              _c("input", { attrs: { type: "hidden", value: "1" } }),
+              _c("input", {
+                attrs: { name: "post_id", type: "hidden", value: "post.id" }
+              }),
               _vm._v(" "),
               _c("textarea", {
                 directives: [
@@ -68658,7 +68718,28 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("br")
+      _c("br"),
+      _vm._v(" "),
+      _vm._l(_vm.post.votes, function(vote) {
+        return _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("\n    Comments\n  ")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("blockquote", { staticClass: "blockquote mb-0" }, [
+              _c("p", [_vm._v(_vm._s(vote.body))]),
+              _vm._v(" "),
+              _c("footer", { staticClass: "blockquote-footer" }, [
+                _vm._v(_vm._s(_vm._f("time")(vote.created_at)) + "  "),
+                _c("cite", { attrs: { title: "Source Title" } }, [
+                  _vm._v("By Unknown")
+                ])
+              ])
+            ])
+          ])
+        ])
+      })
     ],
     2
   )
@@ -68687,59 +68768,80 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    _vm._l(_vm.publishedPosts.data, function(post) {
-      return _c(
-        "div",
-        { staticClass: "blog-post  wow fadeInUp" },
-        [
-          _c("a", { attrs: { href: "blog-details.html" } }, [
-            _c("img", {
-              staticClass: "img-responsive",
-              attrs: { src: _vm.fileLink(post.thumbnail), alt: "" }
-            })
-          ]),
-          _vm._v(" "),
-          _c("h1", [
+    [
+      _vm._l(_vm.publishedPosts.data, function(post) {
+        return _c(
+          "div",
+          { staticClass: "blog-post  wow fadeInUp" },
+          [
             _c("a", { attrs: { href: "blog-details.html" } }, [
-              _vm._v(_vm._s(post.title))
-            ])
-          ]),
-          _vm._v(" "),
-          _c("span", { staticClass: "author" }, [
-            _vm._v(_vm._s(post.user.name))
-          ]),
-          _vm._v(" "),
-          _c("span", { staticClass: "review" }, [_vm._v("6 Comments")]),
-          _vm._v(" "),
-          _c("span", { staticClass: "date-time" }, [
-            _vm._v(_vm._s(_vm._f("time")(post.created_at)))
-          ]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              _vm._s(
-                _vm._f("shortContent")(
-                  _vm.htmlTagRemover(post.content),
-                  50,
-                  "..."
+              _c("img", {
+                staticClass: "img-responsive",
+                attrs: { src: _vm.fileLink(post.thumbnail), alt: "" }
+              })
+            ]),
+            _vm._v(" "),
+            _c("h1", [
+              _c("a", { attrs: { href: "blog-details.html" } }, [
+                _vm._v(_vm._s(post.title))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "author" }, [
+              _vm._v(_vm._s(post.user.name))
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "review" }, [
+              _vm._v(_vm._s(post.votes.length))
+            ]),
+            _vm._v(" "),
+            _c("span", { staticClass: "date-time" }, [
+              _vm._v(_vm._s(_vm._f("time")(post.created_at)))
+            ]),
+            _vm._v(" "),
+            _c("p", [
+              _vm._v(
+                _vm._s(
+                  _vm._f("shortContent")(
+                    _vm.htmlTagRemover(post.content),
+                    50,
+                    "..."
+                  )
                 )
               )
+            ]),
+            _vm._v(" "),
+            _c(
+              "router-link",
+              {
+                staticClass: "btn btn-upper btn-primary read-more",
+                attrs: { to: "/post/" + post.post_slug }
+              },
+              [_vm._v("read more")]
             )
-          ]),
-          _vm._v(" "),
-          _c(
-            "router-link",
-            {
-              staticClass: "btn btn-upper btn-primary read-more",
-              attrs: { to: "/post/" + post.post_slug }
-            },
-            [_vm._v("read more")]
-          )
+          ],
+          1
+        )
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        [
+          _c("pagination", {
+            attrs: { data: _vm.publishedPosts },
+            on: { "pagination-change-page": _vm.paginate }
+          })
         ],
         1
-      )
-    }),
-    0
+      ),
+      _vm._v(" "),
+      _vm.publishedPosts.data == 0
+        ? _c("h5", { staticClass: "alert alert-danger text-center" }, [
+            _vm._v("No Record available")
+          ])
+        : _vm._e()
+    ],
+    2
   )
 }
 var staticRenderFns = []
@@ -86768,8 +86870,9 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error);
       });
     },
-    getAllPosts: function getAllPosts(context) {
-      axios.get('/post').then(function (response) {
+    getAllPosts: function getAllPosts(context, page) {
+      var queryParams = "?".concat($.param(page));
+      axios.get("/post".concat(queryParams)).then(function (response) {
         context.commit('catchPosts', response.data);
       })["catch"](function (error) {
         console.log(error);
@@ -86793,6 +86896,11 @@ __webpack_require__.r(__webpack_exports__);
         });
       })["catch"](function (error) {
         console.log(error);
+      });
+    },
+    algoliaSearchAction: function algoliaSearchAction(context, searchKey) {
+      axios.get('/post/algosearch/' + searchKey).then(function (response) {
+        context.commit('catchPosts', response.data);
       });
     }
   },

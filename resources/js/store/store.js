@@ -74,8 +74,11 @@ export default {
                 console.log(error)
             })
         },
-        getAllPosts(context){
-            axios.get('/post').then(response => {
+        getAllPosts(context, page){
+            
+           let queryParams = `?${ $.param(page) }`
+            
+            axios.get(`/post${queryParams}`).then(response => {
                 context.commit('catchPosts', response.data)
             }).catch((error) => {
                 console.log(error)
@@ -93,6 +96,12 @@ export default {
                 context.commit('catchCategories', {response: response.data, categorySlug})
             }).catch((error) => {
                 console.log(error)
+            })
+        },
+        algoliaSearchAction(context,searchKey){
+
+            axios.get('/post/algosearch/'+ searchKey).then( response => {
+                context.commit('catchPosts', response.data)
             })
         }
     },

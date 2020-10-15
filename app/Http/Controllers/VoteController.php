@@ -13,14 +13,18 @@ class VoteController extends Controller
 
     }
     public function store(Request $request){
-        return $request;
-        try{
-            $request->validate([
+        $request->validate([
+
                 'body' => 'required'
+
             ]);
 
+        try{
+            
             Vote::create([
-                'body' => $request->body
+
+                'body'    => $request->body,
+                'post_id' => $request->post_id,
             ]);
 
             return response()->json(['status' => true], 200);
