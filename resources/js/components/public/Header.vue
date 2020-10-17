@@ -31,7 +31,7 @@
                         <!-- ============================================================= SEARCH AREA ============================================================= -->
                         <div class="search-area">
                                 <div class="control-group">
-                                    <input class="search-field" v-model="searchKey" placeholder="Search here..."  @keyup.enter="searchFunc()">
+                                    <input class="search-field"  id="search-input"  placeholder="Search here...">
                                     <a class="search-button" href="#" ></a>
                                 </div>
                         </div><!-- /.search-area -->
@@ -77,13 +77,13 @@
         </div>
     </header>
 </template>
-
 <script>
+var autocomplete = require('autocomplete.js');
 export default {
     name: "Header",
     data(){
         return {
-            searchKey:''
+           /* searchKey:''*/
         }
     },
     computed:{
@@ -93,21 +93,84 @@ export default {
     },
     mounted(){
         this.$store.dispatch("getTopCategories")
+
+        /* For algolia auto search */
+         var client = algoliasearch('FGUP2LPWO6', '01333ca43a060eda292f382c263c1999')
+          var index = client.initIndex('title');
+          autocomplete('#search-input', { hint: false }, [
+            {
+              source: this.newHitsSource(index, { hitsPerPage: 5 }),
+              displayKey: 'post_slug',
+              templates: {
+                suggestion: function(suggestion) {
+                  return suggestion._highlightResult.post_slug.value;
+                }
+              }
+            }
+          ]).on('autocomplete:selected', function(event, suggestion, dataset, context) {
+            console.log( suggestion.id);
+          });
+
+          /* End Here */
     },
     methods:{
+        /* For algolia search*/
+        newHitsSource(index, params) {
+            return function doSearch(query, cb) {
+              index
+                .search(query, params)
+                .then(function(res) {
+                  cb(res.hits, res);
+                })
+                .catch(function(err) {
+                  console.error(err);
+                  cb([]);
+                });
+            };
+          },
+          /*  End Here   */
+
         getPostsByCategorySlug(slug) {
             this.$store.dispatch("getPosts", {slug})
         },
-        searchFunc : function(){
+       /* searchFunc : function(){
             let searchContent = this.searchKey
             this.$store.dispatch('algoliaSearchAction', searchContent)
         
-        }
+        }*/
 
     }
 }
+
+
 </script>
 
 <style scoped>
 
+ .algolia-autocomplete {
+    width: 100%;
+  }
+  .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+    width: 100%;
+  }
+  .algolia-autocomplete .aa-hint {
+    color: #999;
+  }
+  .algolia-autocomplete .aa-dropdown-menu {
+    width: 100%;
+    background-color: #fff;
+    border: 1px solid #999;
+    border-top: none;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+    cursor: pointer;
+    padding: 5px 4px;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+    background-color: #B2D7FF;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+    font-weight: bold;
+    font-style: normal;
+  }
 </style>
