@@ -19,13 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="b2d85c0f-d7d6-4d8d-838f-a1fbc25cfed0" name="Default Changelist" comment="Updates">
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/js/app2.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app2.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/public/Header.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/public/Header.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/views/site/layout.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/site/layout.blade.php" afterDir="false" />
-    </list>
+    <list default="true" id="b2d85c0f-d7d6-4d8d-838f-a1fbc25cfed0" name="Default Changelist" comment="Updates" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -151,6 +145,8 @@
       <path value="$PROJECT_DIR$/vendor/phpunit/php-timer" />
       <path value="$PROJECT_DIR$/vendor/asm89/stack-cors" />
       <path value="$PROJECT_DIR$/vendor/intervention/image" />
+      <path value="$PROJECT_DIR$/vendor/algolia/algoliasearch-client-php" />
+      <path value="$PROJECT_DIR$/vendor/laravel/scout" />
     </include_path>
   </component>
   <component name="ProjectId" id="1htvrYn7CeYDhGUDKgj9s9rZjmM" />
@@ -166,7 +162,7 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../laravel-api" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="web-ide.project.structure" />
     <property name="ts.external.directory.path" value="H:\Program Files\JetBrains\PhpStorm 2020.2.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
@@ -271,6 +267,7 @@
       <workItem from="1602575739751" duration="1649000" />
       <workItem from="1602673196861" duration="20000" />
       <workItem from="1602844502168" duration="17000" />
+      <workItem from="1603081574349" duration="629000" />
     </task>
     <task id="LOCAL-00001" summary="Updates">
       <created>1600847514023</created>
@@ -311,11 +308,11 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="628" y="297" key="EditFileWatcherDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1602430715235" />
-    <state x="740" y="284" key="FileChooserDialogImpl" timestamp="1602518072361">
+    <state x="740" y="284" key="FileChooserDialogImpl" timestamp="1603082322061">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="740" y="273" key="FileChooserDialogImpl/0.0.1920.1040@0.0.1920.1040" timestamp="1601575982923" />
-    <state x="740" y="284" key="FileChooserDialogImpl/0.0.1920.1080@0.0.1920.1080" timestamp="1602518072361" />
+    <state x="740" y="284" key="FileChooserDialogImpl/0.0.1920.1080@0.0.1920.1080" timestamp="1603082322061" />
     <state width="1876" height="162" key="GridCell.Tab.0.bottom" timestamp="1602519213134">
       <screen x="0" y="0" width="1920" height="1080" />
     </state>

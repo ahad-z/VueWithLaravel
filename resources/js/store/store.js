@@ -1,4 +1,4 @@
-export default {
+    export default {
     state: {
         categoryData: {},
         paginateCategory:{},
@@ -75,9 +75,9 @@ export default {
             })
         },
         getAllPosts(context, page){
-            
+
            let queryParams = `?${ $.param(page) }`
-            
+
             axios.get(`/post${queryParams}`).then(response => {
                 context.commit('catchPosts', response.data)
             }).catch((error) => {
