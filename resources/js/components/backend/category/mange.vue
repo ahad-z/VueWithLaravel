@@ -107,7 +107,7 @@ export default {
     watch:{
         selected : function (data){
             this.isSelected = (data.length > 0)
-            this.selectedAll = (data.length === this.getCategories.length )
+            this.selectedAll = (data.length === this.getCategories.data.length )
         },
     },
     methods:{

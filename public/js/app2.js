@@ -6366,7 +6366,7 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     selected: function selected(data) {
       this.isSelected = data.length > 0;
-      this.selectedAll = data.length === this.getCategories.length;
+      this.selectedAll = data.length === this.getCategories.data.length;
     }
   },
   methods: {
@@ -11900,7 +11900,7 @@ exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/c
 
 
 // module
-exports.push([module.i, "\n.table thead th[data-v-e28ea966] {\n    font-weight: 800;\n    color: rgb(89 117 22);\n    font-size: 0.75rem;\n    text-transform: uppercase;\n}\n.header-counter[data-v-e28ea966] {\n     border: 1px solid #dcbaba;\n     font-size: 18px;\n     margin: 13px;\n     width: 25px;\n     text-align: center;\n}\n\n", ""]);
+exports.push([module.i, "\n.table thead th[data-v-e28ea966] {\r\n    font-weight: 800;\r\n    color: rgb(89 117 22);\r\n    font-size: 0.75rem;\r\n    text-transform: uppercase;\n}\n.header-counter[data-v-e28ea966] {\r\n     border: 1px solid #dcbaba;\r\n     font-size: 18px;\r\n     margin: 13px;\r\n     width: 25px;\r\n     text-align: center;\n}\r\n\r\n", ""]);
 
 // exports
 
@@ -72910,7 +72910,7 @@ var render = function() {
       _vm._l(_vm.post.votes, function(vote) {
         return _c("div", { staticClass: "card" }, [
           _c("div", { staticClass: "card-header" }, [
-            _vm._v("\n    Comments\n  ")
+            _vm._v("\r\n    Comments\r\n  ")
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
@@ -91131,7 +91131,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! J:\work\htdocs\VueWithLaravel\resources\js\app2.js */"./resources/js/app2.js");
+module.exports = __webpack_require__(/*! D:\work\htdocs\VueWithLaravel\resources\js\app2.js */"./resources/js/app2.js");
 
 
 /***/ }),
